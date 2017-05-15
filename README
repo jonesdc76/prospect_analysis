@@ -1,3 +1,17 @@
+***************************************
+BiPoTree.C
+***************************************
+Early code to find Bi214->Po214->Pb210 beata alpha candidates. Po 214 has a 
+half life of 0.164 ms so look for beta followed shortly after by an alpha. 
+This early code searched for beta candidate then when it found one searched for
+a time-correlated alpha. This turns out to be a bad idea since most events are 
+beta/gamma-like. More efficient search method to find alpha (delayed candidate)
+first and then look backward for beta (prompt candidate) is found in the 
+program "BuildBoPoTree.C". 
+
+***************************************
+BinaryToRootTree.C
+***************************************
 Information on ROOT trees created by BinaryToRootTree.C
 -------------------------------------------------------
 These trees contain the entire raw traces in addition to other useful data like
@@ -55,3 +69,12 @@ ped4<Channel>          struct       C structure compose of val(double), rms(doub
         .val           double       Mean of 3n to 4n-1 samples of waveform
         .rms           double       RMS (standard deviation) of 3n to 4n-1 samples of waveform
         .n             uint16_t     Number of samples in pedestal calculation.
+
+
+***************************************
+BuildBiPoTree.C
+***************************************
+Code to find Bi214->Po214->Pb210 beata alpha candidates. Po 214 has a 
+half life of 0.164 ms so look for beta followed shortly after by an alpha. 
+This code searches for alphas (delayed candidates) and then when it finds one
+searches backward for a time-correlated beta. 
