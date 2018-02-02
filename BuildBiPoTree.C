@@ -30,11 +30,17 @@ const double kPo214HalfLife = 164000;
 //earliest time (ns) to look for correlated partner 
 const double kStart = 10000; 
 
+//number of half lives in near window
+const int nHalf = 3;
+
 //latest time (ns) to look for correlated partner
-const double kEnd = kStart + 3 * kPo214HalfLife; 
+const double kEnd = kStart + nHalf * kPo214HalfLife; 
+
+//number of half lives between end of near window and start of far
+const int nHalfSep = 10;
 
 //start time of far window for finding accidental correlated partners
-const double kFarStart = kEnd + 10 * kPo214HalfLife; 
+const double kFarStart = kEnd + nHalfSep * kPo214HalfLife; 
 
 //factor by which far window is longer than near
 const double kScale = 4.0; 
@@ -263,6 +269,8 @@ int BuildBiPoTree(TString fname, TString series = "007",
       }
     }
 
+    //Removed 09/26/17
+    /*
     n = 1;
     while(i+n < tree->GetEntries()){
       //forward search for events cut due to multiple delayed candidates
@@ -272,15 +280,15 @@ int BuildBiPoTree(TString fname, TString series = "007",
       ++n;
       //beyond time window?
       if((pulse.t - bipo.delayed.t) > kEnd)
-	break; 
+    	break; 
       if(pulse.PID & RECOIL_HIT//multiple recoils
-	 && abs(pulse.y - bipo.delayed.y) < 2*kMaxDist//close to each other
-	 && pulse.seg == bipo.delayed.seg){ //in same segment
-	i += n -1;//discard both recoils
-	goto reset;
-      }
-      
+    	 && abs(pulse.y - bipo.delayed.y) < 2*kMaxDist//close to each other
+    	 && pulse.seg == bipo.delayed.seg){ //in same segment
+    	i += n -1;//discard both recoils
+    	goto reset;
+      }      
     }
+    */
 
     //find prompt beta candidates
     //////////////////////////////////
@@ -311,12 +319,17 @@ int BuildBiPoTree(TString fname, TString series = "007",
 	 && pulse.seg == bipo.delayed.seg //in the same segment/cell
 	 && abs(pulse.y - bipo.delayed.y) < kMaxDist //close to recoil position
 	 && (bipo.delayed.t - pulse.t) > kStart){ //inside time window
+	//Added 09/26/17
+	pass = true;
+	//Removed 09/26/17
+	/*
 	if(pulse.evt != prev_pulse.evt){//not same event as previous entry
 	  pass = true;
 	}else{
 	  pass = false;
 	  ++excl_p;
 	}
+	*/
       }else pass = false;
 	 
     }
@@ -333,12 +346,14 @@ int BuildBiPoTree(TString fname, TString series = "007",
 	++n;
 	//if passes all tests and not a multi-cell event then store
 	if(pass){
-	  if(pulse.evt != prev_pulse.evt){//not same event as next entry
-	    bipo.far.push_back(prev_pulse);
-	    ++bipo.mult_f;
-	  }else{
-	    ++excl_f;
-	  }
+	//Removed 09/26/17
+	//  if(pulse.evt != prev_pulse.evt){//not same event as next entry
+	  bipo.far.push_back(prev_pulse);
+	  ++bipo.mult_f;
+	// }else{
+	//   ++excl_f;
+	// }
+	
 	}
 
 	//beyond time window?
@@ -349,12 +364,17 @@ int BuildBiPoTree(TString fname, TString series = "007",
 	   && pulse.seg == bipo.delayed.seg //in the same segment/cell
 	   && abs(pulse.y - bipo.delayed.y) < kMaxDist //close to recoil event
 	   && (pulse.t - bipo.delayed.t) > kFarStart){ //inside far time window
+	  //Added 09/26/17
+	  pass = true;
+	  //Removed 09/26/17
+	  /*
 	  if(pulse.evt != prev_pulse.evt){//not same event as previous entry
 	    pass = true;
 	  }else{
 	    pass = false;
 	    ++excl_f;
 	  }
+	  */
 	}else pass = false;	 
       }
     
