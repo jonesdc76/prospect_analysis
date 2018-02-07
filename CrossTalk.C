@@ -130,7 +130,7 @@ int CrossTalk(int npulses = 0, int series = 13, int first = 0, int last = 0, con
 	  h2e->Fill(x,y);
 	  if(x>4 && x<9 && y>2 && y<7){
 	    hdt->Fill(-dt);
-	    if(x>5&&x<7&&y>3&&y<6)
+	    if(x>5&&x<8&&y>3&&y<6)
 	      hdtp->Fill(-dt);
 	    else
 	      hdtn->Fill(-dt);
@@ -142,7 +142,7 @@ int CrossTalk(int npulses = 0, int series = 13, int first = 0, int last = 0, con
 	  h2w->Fill(x,y);
 	  if(x>4 && x<9 && y>2 && y<7){
 	    hdt->Fill(-dt);
-	    if(x>5&&x<7&&y>3&&y<6)
+	    if(x>5&&x<8&&y>3&&y<6)
 	      hdtp->Fill(-dt);
 	    else
 	      hdtn->Fill(-dt);
@@ -189,7 +189,10 @@ int CrossTalk(int npulses = 0, int series = 13, int first = 0, int last = 0, con
 	  h2e->Fill(x,y);
 	  if(x>4 && x<9 && y>2 && y<7){
 	    hdt->Fill(dt);
-	    hdtp->Fill(dt);
+	    if(x>5&&x<8&&y>3&&y<6)
+	      hdtp->Fill(dt);
+	    else
+	      hdtn->Fill(dt);
 	    he[idx]->Fill(a);
 	    if(a < kMaxSPE)
 	      hSPEe[idx]->Fill(a);
@@ -198,7 +201,10 @@ int CrossTalk(int npulses = 0, int series = 13, int first = 0, int last = 0, con
 	  h2w->Fill(x,y);
 	  if(x>4 && x<9 && y>2 && y<7){
 	    hdt->Fill(dt);
-	    hdtp->Fill(dt);
+	    if(x>5&&x<8&&y>3&&y<6)
+	      hdtp->Fill(dt);
+	    else
+	      hdtn->Fill(dt);
 	    hw[idx]->Fill(a);
 	    if(a < kMaxSPE)
 	      hSPEw[idx]->Fill(a);

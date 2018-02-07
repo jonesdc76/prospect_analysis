@@ -69,7 +69,7 @@ int PlotWaveform(Long64_t max_entries = 0, bool single_pulse = 0, int series = 1
     ch->GetEntry(i);
     if((int)nsamp > nmax)nmax = (int)nsamp;
     
-    if(single_pulse && chan != -100){
+    if(single_pulse && chan == 124){
       for(ULong64_t j=0;j<nsamp;++j)samples[j] = (int)samps[j];
       gr = new TGraph(nsamp,t,samples);
       gr->SetTitle(Form("Channel %i",chan));
