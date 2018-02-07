@@ -3,6 +3,7 @@ BiPoTree.C
 ***************************************
 Early code to find Bi214->Po214->Pb210 beata alpha candidates. Po 214 has a 
 half life of 0.164 ms so look for beta followed shortly after by an alpha. 
+This code was built to run on the Wright server at Yale.
 This early code searched for beta candidate then when it found one searched for
 a time-correlated alpha. This turns out to be a bad idea since most events are 
 beta/gamma-like. More efficient search method to find alpha (delayed candidate)
@@ -74,7 +75,39 @@ ped4<Channel>          struct       C structure compose of val(double), rms(doub
 ***************************************
 BuildBiPoTree.C
 ***************************************
-Code to find Bi214->Po214->Pb210 beata alpha candidates. Po 214 has a 
-half life of 0.164 ms so look for beta followed shortly after by an alpha. 
-This code searches for alphas (delayed candidates) and then when it finds one
-searches backward for a time-correlated beta. 
+Builds tree of BiPo candidates where each entry is a single new prompt 
+candidate with any number of associated delayed and far candidates.
+Identifies time correlated candidates from the  Bi214->Po214->Pb210 beta alpha 
+decay chain. Po214 has a half life of 0.164 ms so look for beta followed shortly 
+after by an alpha. This code searches for alphas (delayed candidates) and then 
+when it finds one searches backward for a time-correlated beta. 
+This code was built to run on the Wright server at Yale.
+
+***************************************
+BuildRnPoTree.C
+***************************************
+Builds tree of RnPo candidates where each entry is a single new prompt alpha
+candidate with any number of associated delayed and far candidates. This is 
+useful for finding the delayed alpha spectrum. To find the prompt alpha spectrum
+one would have to start by identifying delayed and then find all time-correlated
+prompt alphas. This reverse process is done by "BuildRnPoDelTree.C". 
+Identifies time correlated candidates from the  Rn219->Po215->Pb211 alpha-alpha 
+decay chain. Po215 has a half life of 1.8 ms so look for alpha followed shortly 
+after by another alpha. This code searches for prompt alpha candidates and then 
+when it finds one searches forward for a second time-correlated alpha. 
+This code was built to run on my desktop at Temple.
+
+***************************************
+BuildRnPoDelTree.C
+***************************************
+Builds tree of RnPo candidates where each entry is a single new delayed alpha 
+candidate with any number of associated prompt and far candidates. This is 
+useful for finding the prompt alpha spectrum. To find the delayed alpha spectrum
+one would have to start by identifying prompt and then find all time-correlated
+delayed alphas. This reverse process is done by "BuildRnPoTree.C". 
+Identifies time correlated candidates from the  Rn219->Po215->Pb211 alpha-alpha 
+decay chain. Po215 has a half life of 1.8 ms so look for alpha followed shortly 
+after by another alpha. This code searches for delayed alpha candidates and then
+when it finds one searches backward for a second time-correlated alpha. 
+This code was built to run on my desktop at Temple.
+

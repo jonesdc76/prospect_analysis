@@ -15,7 +15,7 @@
 using namespace std;
 const int kNbinsX = 200;
 
-int OCSstudy(int npulses = 0, int series = 13, int first = 0, int last = 0, const char* treename = "DetPulse", TString dir = "."){//TString dir = "/projects/prospect/converted_data/Pulse_Latest/DryCommissioning/"){
+int OCSstudy(int npulses = 0, int series = 13, int first = 0, int last = 0, const char* treename = "DetPulse", TString dir = "../DetPulse"){//TString dir = "/projects/prospect/converted_data/Pulse_Latest/DryCommissioning/"){
   time_t start, end;
   time(&start);
   gStyle->SetOptStat(0);
