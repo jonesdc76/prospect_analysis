@@ -54,8 +54,9 @@ void Chain::CreateChain(){
       }
     }
   }
-  printf("%i files added to chain\n", fNfiles);
-  fIsMade = true;
+  printf("%i Files added to chain\n", fNfiles);
+  if(fNfiles > 0)
+    fIsMade = true;
 }
 
 TChain* Chain::GetChain(){
@@ -63,7 +64,7 @@ TChain* Chain::GetChain(){
     return fChain;
   }
   else {
-    printf("No TChain created yet. Run CreatChain() first.\n");
+    printf("No TChain created yet. Run CreateChain() first.\n");
     return 0;
   }
 }

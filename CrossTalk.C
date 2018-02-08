@@ -14,12 +14,17 @@
 
 using namespace std;
 const int kNbinsX = 200;
-const double kMaxDT = 1000; //maximum time (ns) between coincident pulses
+const double kMaxDT = 800; //maximum time (ns) between coincident pulses
 const double kMaxSPE = 400; //maximum ADC value included in SPE histograms
 
 int CrossTalk(int npulses = 0, int series = 13, int first = 0, int last = 0, const char* treename = "DetPulse", TString dir = "../DetPulse"){//TString dir = "/projects/prospect/converted_data/Pulse_Latest/DryCommissioning/"){
   time_t start, end;
   time(&start);
+  gStyle->SetPadRightMargin(0.03);
+  gStyle->SetLabelSize(0.07);
+  gStyle->SetLabelSize(0.07,"Y");
+  gStyle->SetPadTopMargin(0.08);
+
   gStyle->SetOptStat(0);
   gStyle->SetStatY(0.9);
   gStyle->SetTitleW(0.9);
@@ -27,7 +32,6 @@ int CrossTalk(int npulses = 0, int series = 13, int first = 0, int last = 0, con
   chain.SetVerbose(1);
   if(npulses>0)
     chain.SetMaxPulses(npulses);
-  chain.CreateChain();
   TChain *ch  = chain.GetChain();
   if(!chain.GetNfiles()){
     cout<<"No trees found. Exiting.\n";
@@ -62,12 +66,14 @@ int CrossTalk(int npulses = 0, int series = 13, int first = 0, int last = 0, con
   vector<double>vArea;
   vector<double>vDt;
   TH1D *he[16], *hw[16], *hSPEe[16], *hSPEw[16];
-  TH1D *hdt = new TH1D("hdt","Time of Pulses Relative to OCS Pulse",kMaxDT,-2*kMaxDT,2*kMaxDT);
+  TH1D *hdt = new TH1D("hdt","Time of Pulses Relative to OCS Pulse",kMaxDT/4,-kMaxDT,kMaxDT);
   hdt->SetXTitle("#Delta t (ns)");
-  TH1D *hdtn = new TH1D("hdtn","hdtn",kMaxDT,-2*kMaxDT,2*kMaxDT);
-  hdtn->SetLineColor(kRed);
-  TH1D *hdtp = new TH1D("hdtp","hdtp",kMaxDT,-2*kMaxDT,2*kMaxDT);
-  hdtp->SetLineColor(kGreen+2);
+  hdt->SetLineColor(kBlack);
+  //hdt->SetLineWidth(3);
+  TH1D *hdtn = new TH1D("hdtn","hdtn",kMaxDT/4,-kMaxDT,kMaxDT);
+  hdtn->SetLineColor(kBlue);
+  TH1D *hdtp = new TH1D("hdtp","hdtp",kMaxDT/4,-kMaxDT,kMaxDT);
+  hdtp->SetLineColor(kOrange);
   Double_t binEdge[kNbinsX+1];
   Double_t lBin = 10, hBin = 100000, log10l = log10(lBin), log10h = log10(hBin);
   for(int i=0;i<=kNbinsX;++i){
@@ -300,13 +306,13 @@ int CrossTalk(int npulses = 0, int series = 13, int first = 0, int last = 0, con
   h2e->Draw("colz");
   c->cd(3)->SetLogz();
   h2c->Draw("colz");
-  c->cd(4);
-  h2dt->Draw("colz");
+  c->cd(4)->SetLogy();
+  hdt->Draw();
+  hdtp->Draw("same");
+  hdtn->Draw("same");
+  hdt->GetXaxis()->SetTitleSize(0.05);
+  c->SaveAs("../plots/CrossTalkHitMap.pdf");
   c->ForceUpdate();
-  gStyle->SetPadRightMargin(0.03);
-  gStyle->SetLabelSize(0.06);
-  gStyle->SetLabelSize(0.06,"Y");
-  gStyle->SetPadTopMargin(0.08);
 
   int can[16] = {13,14,15,16,9,10,11,12,5,6,7,8,1,2,3,4};
   TCanvas *cSPEe = new TCanvas("cSPEe","cSPEe",0,0,1600,1000);
@@ -319,6 +325,8 @@ int CrossTalk(int npulses = 0, int series = 13, int first = 0, int last = 0, con
     cSPEw->cd(can[i]);
     hSPEw[i]->Draw();
   }
+  cSPEe->SaveAs("../plots/SPE_east.pdf");
+  cSPEw->SaveAs("../plots/SPE_west.pdf");
   TCanvas *c2 = new TCanvas("c2","c2",0,0,1600,1000);
   c2->Divide(4,4);
   double primary = 0, secondary = 0;
@@ -354,23 +362,21 @@ int CrossTalk(int npulses = 0, int series = 13, int first = 0, int last = 0, con
     }
     cout<<"Integral: "<<integral<<endl;
   }
+  c2->SaveAs("../plots/pulse_distributions.pdf");
   cout<<"Primary: "<<primary<<endl;
   cout<<"Secondary: "<<secondary<<endl;
   cout<<secondary/primary*100<<"% signal leakage\n";
-  TCanvas *c3 = new TCanvas("c3","c3",0,0,800,550);
-  c3->SetLogy();
-  hdt->Draw();
-  hdtp->Draw("same");
-  hdtn->Draw("same");
-  hdt->GetXaxis()->SetTitleSize(0.05);
-  gPad->Update();
+  // TCanvas *c3 = new TCanvas("c3","c3",0,0,800,550);
+  // c3;
+  // h2dt->Draw("colz");
+  // gPad->Update();
   //  hSPEe[6]->Draw();
-  //hSPEw[6]->Draw("sames");
-  // double integral = 0;
-  // for(int i=1;i<=he[0]->GetNbinsX();++i){
-  //   integral += he[0]->GetBinContent(i)*he[0]->GetBinWidth(i);
-  // }
-  // cout<<"Int: "<<integral<<" "<<he[0]->Integral()<<" "<<he[0]->Integral("width")<<endl;
+  // hSPEw[6]->Draw("sames");
+  double integral = 0;
+  for(int i=1;i<=he[0]->GetNbinsX();++i){
+    integral += he[0]->GetBinContent(i)*he[0]->GetBinWidth(i);
+  }
+  cout<<"Int: "<<integral<<" "<<he[0]->Integral()<<" "<<he[0]->Integral("width")<<endl;
   for(int i=0;i<16;++i){
     cout<<"SPE east "<<i<<": "<<spee[i]<<endl;
     cout<<"SPE west "<<i<<": "<<spew[i]<<endl;
