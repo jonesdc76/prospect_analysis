@@ -17,6 +17,7 @@ Chain::Chain(Int_t series, Int_t first, Int_t last, TString dir,
 Chain::Chain(Int_t series, Int_t *filearray, Int_t len, TString dir, 
 	     const char* treename){
   fSeries = series;
+  fFileArray = filearray;
   fLen = len;
   fDirName = dir;
   fTreeName = (char *)treename;
@@ -25,7 +26,6 @@ Chain::Chain(Int_t series, Int_t *filearray, Int_t len, TString dir,
 
 void Chain::CreateChain(){
   TString dname = fDirName + Form("/series%03i", fSeries);
-  int nadded = 0;
   fChain = new TChain(fTreeName);
   if(fLen > 0){//complete chain with specified array of files
     for(int i=0;i<fLen; ++i){
@@ -41,7 +41,7 @@ void Chain::CreateChain(){
     for(int i=0;i<nf; ++i){
       TString fn = Form("%s/s%03i_f%05i*.root",dname.Data(), fSeries, fFirst+i);
       int nadd  = fChain->Add(fn.Data());
-      nadded += nadd;
+      fNfiles += nadd;
       if(fVerbose){
 	if(nadd)
 	  printf("Added s%03i_f%05i*.root\n", fSeries, fFirst+i);
@@ -54,7 +54,7 @@ void Chain::CreateChain(){
       }
     }
   }
-  printf("%i files added to chain\n", nadded);
+  printf("%i files added to chain\n", fNfiles);
   fIsMade = true;
 }
 

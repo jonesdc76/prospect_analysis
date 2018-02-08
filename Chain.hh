@@ -13,8 +13,8 @@
 
 class Chain{
 
-  private: 
-  Bool_t fIsMade = 0;//set after chain creation
+  private:
+  Bool_t fIsMade = false;//set to true when Chain successfully created
   Bool_t fVerbose = 0;//write files added to terminal
   Int_t fSeries = 0;//Series number
   Int_t fFirst = 0;//File number of first file to use in series  
@@ -22,6 +22,7 @@ class Chain{
   Long64_t fMaxPulses = 0;//Stop adding files after max_pulses added
   Int_t *fFileArray;//Array of file numbers of interest
   Int_t fLen = 0;//length of filearray
+  Int_t fNfiles = 0; //number of files added to TChain
   char* fTreeName;//Name of TTree to load
   TChain *fChain;
   TString fDirName;//Directory where series folders are found
@@ -33,6 +34,7 @@ class Chain{
   Chain(Int_t series, Int_t *filearray, Int_t len, TString dir, const char* treename);
   void CreateChain();
   TChain* GetChain();
+  Int_t GetNfiles(){return fNfiles;};
   void SetDir(TString dir);//Directory where files are found
   void SetFileArray(Int_t *filearray, int len);//Array of file numbers to add to chain
   void SetFirst(Int_t first);//File number of first file to use in series  

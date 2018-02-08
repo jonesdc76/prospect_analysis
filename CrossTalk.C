@@ -29,6 +29,10 @@ int CrossTalk(int npulses = 0, int series = 13, int first = 0, int last = 0, con
     chain.SetMaxPulses(npulses);
   chain.CreateChain();
   TChain *ch  = chain.GetChain();
+  if(!chain.GetNfiles()){
+    cout<<"No trees found. Exiting.\n";
+    return -1;
+  }
   Int_t det;
   Long64_t evt, prev_evt = 0;
   Float_t a, b, h, rise, PSD;
